@@ -1,0 +1,7 @@
+<% content_for :title, "Audit — #{@project.display_name}" %>
+<%= render "shared/project_header" %>
+<%= render "shared/project_nav", project: @project, destination: params[:destination] %>
+<section class="rounded-xl border border-slate-800 bg-slate-900 p-6">
+  <h2 class="text-lg font-semibold text-white">kamal audit</h2>
+  <pre class="mt-4 overflow-auto rounded-lg bg-black p-4 text-sm text-slate-200"><%= @audit_output %></pre>
+</section>
