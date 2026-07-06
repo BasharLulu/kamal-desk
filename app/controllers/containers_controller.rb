@@ -6,6 +6,7 @@ class ContainersController < ApplicationController
     @containers = inspector.containers
     @details = inspector.details
     @versions = inspector.versions_for_rollback
+    @all_details = inspector.all_details
   end
 
   private

@@ -14,6 +14,7 @@ class ProjectsController < ApplicationController
     @kamal_available = @project.kamal_available?
     @active_run = @project.deployment_runs.find_by(status: "running")
     @lock_status = Kamal::LockInspector.new(project: @project, destination: @destination).status
+    @audit_preview = Kamal::AuditReader.new(project: @project, destination: @destination).fetch
   end
 
   def create

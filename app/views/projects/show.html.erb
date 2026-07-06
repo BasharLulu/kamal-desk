@@ -44,6 +44,15 @@
       </div>
     </section>
 
+
+    <section class="rounded-xl border border-slate-800 bg-slate-900 p-6">
+      <div class="flex items-center justify-between gap-4">
+        <h2 class="text-lg font-semibold text-white">Recent audit</h2>
+        <%= link_to "Full audit", project_audit_path(@project, destination: @destination), class: "text-sm text-sky-400 hover:text-sky-300" %>
+      </div>
+      <pre class="mt-4 max-h-48 overflow-auto rounded-lg bg-black p-4 text-xs text-slate-300"><%= @audit_preview %></pre>
+    </section>
+
     <section class="rounded-xl border border-slate-800 bg-slate-900 p-6">
       <h2 class="text-lg font-semibold text-white">Deploy history</h2>
       <% if @deployment_runs.any? %>

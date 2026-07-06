@@ -10,7 +10,9 @@ Rails.application.routes.draw do
     resource :containers, only: :show, controller: "containers"
     resource :proxy, only: :show, controller: "proxy"
     resource :audit, only: :show, controller: "audits"
-    resource :server_metrics, only: :show
+    resource :server_metrics, only: :show do
+      get :refresh
+    end
   end
 
   resources :deployment_runs, only: :show do
