@@ -22,8 +22,8 @@ module ApplicationHelper
     raw(%(<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="#{css_class}" aria-hidden="true">#{path}</svg>))
   end
 
-  def nav_link_class(current_path, target_path)
-    active = current_path == target_path
+  def nav_link_class(_current_path, target_path)
+    active = current_page?(target_path)
     base = "ui-nav-tab"
     active ? "#{base} ui-nav-tab-active" : "#{base} ui-nav-tab-inactive"
   end

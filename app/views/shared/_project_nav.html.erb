@@ -1,43 +1,24 @@
 <% destination = local_assigns[:destination] %>
 <% project = local_assigns[:project] %>
 
-<% if project.destinations.any? %>
-  <div class="mb-4 flex flex-wrap items-center gap-2 text-sm">
-    <span class="ui-muted">Destination</span>
-    <%= link_to "default", url_for(destination: nil), class: destination_chip_class(destination.blank?) %>
-    <% project.destinations.each do |dest| %>
-      <%= link_to dest, url_for(destination: dest), class: destination_chip_class(destination == dest) %>
-    <% end %>
-  </div>
-<% end %>
+<%= render "shared/destination_selector", project: project, destination: destination %>
 
-<nav class="mb-8 overflow-x-auto" aria-label="Project sections">
-  <div class="flex min-w-max flex-col gap-4 border-b border-slate-200 pb-4 dark:border-slate-800">
-    <% nav_groups = {
-      "Deploy" => [[ "Overview", :project_path ]],
-      "Runtime" => [
-        [ "Containers", :project_containers_path ],
-        [ "Proxy", :project_proxy_path ],
-        [ "Accessories", :project_accessories_path ],
-        [ "Server load", :project_server_metrics_path ]
-      ],
-      "Debug" => [
-        [ "Logs", :project_logs_path ],
-        [ "Console", :project_console_path ],
-        [ "Audit", :project_audit_path ]
-      ]
-    } %>
+<nav class="mb-6 overflow-x-auto" aria-label="Project sections">
+  <div class="flex min-w-max gap-1 border-b border-slate-200 pb-3 dark:border-slate-800">
+    <% nav_links = [
+      [ "Overview", :project_path ],
+      [ "Containers", :project_containers_path ],
+      [ "Proxy", :project_proxy_path ],
+      [ "Accessories", :project_accessories_path ],
+      [ "Server load", :project_server_metrics_path ],
+      [ "Logs", :project_logs_path ],
+      [ "Console", :project_console_path ],
+      [ "Audit", :project_audit_path ]
+    ] %>
 
-    <% nav_groups.each do |group_name, links| %>
-      <div>
-        <p class="ui-nav-group-label mb-2"><%= group_name %></p>
-        <div class="flex flex-wrap gap-1">
-          <% links.each do |label, path_helper| %>
-            <% target_path = send(path_helper, project, destination: destination) %>
-            <%= link_to label, target_path, class: nav_link_class(request.path, target_path) %>
-          <% end %>
-        </div>
-      </div>
+    <% nav_links.each do |label, path_helper| %>
+      <% target_path = send(path_helper, project, destination: destination) %>
+      <%= link_to label, target_path, class: nav_link_class(request.path, target_path) %>
     <% end %>
   </div>
 </nav>

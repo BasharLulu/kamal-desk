@@ -9,9 +9,26 @@
   <section class="space-y-6">
     <%= render layout: "ui/card", locals: { title: "Register project", subtitle: "Pick a discovered Kamal app or enter a path manually." } do %>
       <%= form_with model: @project, url: projects_path, class: "space-y-4" do |form| %>
+        <% if @discovered_projects.any? %>
+          <div>
+            <label for="discovered-project-select" class="ui-label">Discovered project</label>
+            <select
+              id="discovered-project-select"
+              class="ui-input"
+              data-controller="project-picker"
+              data-action="change->project-picker#fill"
+            >
+              <option value="">Select from ~/Sites…</option>
+              <% @discovered_projects.reject(&:registered).each do |entry| %>
+                <option value="<%= entry.path %>"><%= entry.name %> — <%= entry.path %></option>
+              <% end %>
+            </select>
+          </div>
+        <% end %>
+
         <div>
           <%= form.label :root_path, "Project path", class: "ui-label" %>
-          <%= form.text_field :root_path, placeholder: "/Users/you/Sites/my-app", class: "ui-input" %>
+          <%= form.text_field :root_path, placeholder: "/Users/you/Sites/my-app", class: "ui-input", data: { project_picker_target: "path" } %>
         </div>
         <%= form.submit "Add project", class: ui_btn_class(:primary) %>
       <% end %>

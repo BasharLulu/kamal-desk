@@ -1,0 +1,28 @@
+<% destination = local_assigns[:destination] %>
+<% project = local_assigns[:project] %>
+<% return unless project.destinations.any? %>
+
+<div class="mb-4 flex flex-wrap items-center gap-3 text-sm">
+  <span class="ui-muted">Destination</span>
+
+  <label class="sr-only" for="project-destination-select">Destination</label>
+  <select
+    id="project-destination-select"
+    class="ui-input w-auto min-w-[10rem]"
+    data-controller="destination"
+    data-destination-url-value="<%= request.path %>"
+    data-action="change->destination#change"
+  >
+    <option value="" <%= "selected" if destination.blank? %>>default</option>
+    <% project.destinations.each do |dest| %>
+      <option value="<%= dest %>" <%= "selected" if destination == dest %>><%= dest %></option>
+    <% end %>
+  </select>
+
+  <div class="flex flex-wrap gap-1">
+    <%= link_to "default", request.path, class: destination_chip_class(destination.blank?) %>
+    <% project.destinations.each do |dest| %>
+      <%= link_to dest, url_for(destination: dest), class: destination_chip_class(destination == dest) %>
+    <% end %>
+  </div>
+</div>

@@ -11,36 +11,56 @@
 <%= render "shared/project_header", actions: actions %>
 <%= render "shared/project_nav", project: @project, destination: @destination %>
 
-<div class="grid gap-6 xl:grid-cols-[1fr_1.2fr]">
-  <div class="space-y-6">
-    <%= render layout: "ui/card", locals: { title: "Configuration" } do %>
-      <% if @kamal_available %>
-        <p class="text-sm text-emerald-600 dark:text-emerald-300">Kamal CLI is available for this project.</p>
-      <% else %>
-        <p class="text-sm text-amber-600 dark:text-amber-300">Could not run kamal version in this project directory.</p>
-      <% end %>
+<div class="ui-deploy-bar">
+  <%= render "shared/deploy_actions", project: @project, destination: @destination, lock_status: @lock_status %>
+</div>
 
-      <div class="mt-4 space-y-4">
-        <% @config_summaries.each do |summary| %>
-          <div class="ui-card-inner">
-            <h3 class="font-medium text-slate-900 dark:text-white"><%= summary.destination %></h3>
-            <% if summary.error %>
-              <p class="mt-2 text-sm text-red-600 dark:text-red-300"><%= summary.error %></p>
-            <% else %>
-              <dl class="ui-kv-grid">
-                <dt>Service</dt><dd><%= summary.service %></dd>
-                <dt>Image</dt><dd><%= summary.image %></dd>
-                <dt>Proxy</dt><dd><%= summary.proxy_host.presence || "—" %> <%= summary.proxy_ssl ? "(TLS)" : "" %></dd>
-                <dt>Hosts</dt><dd><%= summary.hosts.map { |h| "#{h[:role]}@#{h[:host]}" }.join(", ").presence || "—" %></dd>
-                <dt>Accessories</dt><dd><%= summary.accessories.join(", ").presence || "—" %></dd>
-                <dt>Aliases</dt><dd><%= summary.aliases.join(", ").presence || "—" %></dd>
-              </dl>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
+<% if @active_run %>
+  <%= render layout: "ui/card", locals: {
+    title: "Live: kamal #{@active_run.command}",
+    actions: button_to("Cancel", cancel_deployment_run_path(@active_run), method: :post, class: ui_btn_class(:warning, size: :xs))
+  } do %>
+    <%= render "ui/terminal",
+      content: @active_run.output,
+      variant: :live,
+      min_height: "min-h-[280px]",
+      data: {
+        controller: "command-output",
+        command_output_deployment_run_id_value: @active_run.id
+      } %>
+  <% end %>
+<% end %>
+
+<div class="grid gap-6 lg:grid-cols-2">
+  <%= render layout: "ui/card", locals: { title: "Configuration" } do %>
+    <% if @kamal_available %>
+      <p class="text-sm text-emerald-600 dark:text-emerald-300">Kamal CLI is available for this project.</p>
+    <% else %>
+      <p class="text-sm text-amber-600 dark:text-amber-300">Could not run kamal version in this project directory.</p>
     <% end %>
 
+    <div class="mt-4 space-y-4">
+      <% @config_summaries.each do |summary| %>
+        <div class="ui-card-inner">
+          <h3 class="font-medium text-slate-900 dark:text-white"><%= summary.destination %></h3>
+          <% if summary.error %>
+            <p class="mt-2 text-sm text-red-600 dark:text-red-300"><%= summary.error %></p>
+          <% else %>
+            <dl class="ui-kv-grid">
+              <dt>Service</dt><dd><%= summary.service %></dd>
+              <dt>Image</dt><dd><%= summary.image %></dd>
+              <dt>Proxy</dt><dd><%= summary.proxy_host.presence || "—" %> <%= summary.proxy_ssl ? "(TLS)" : "" %></dd>
+              <dt>Hosts</dt><dd><%= summary.hosts.map { |h| "#{h[:role]}@#{h[:host]}" }.join(", ").presence || "—" %></dd>
+              <dt>Accessories</dt><dd><%= summary.accessories.join(", ").presence || "—" %></dd>
+              <dt>Aliases</dt><dd><%= summary.aliases.join(", ").presence || "—" %></dd>
+            </dl>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div class="space-y-6">
     <%= render layout: "ui/card", locals: {
       title: "Recent audit",
       actions: link_to("Full audit", project_audit_path(@project, destination: @destination), class: "ui-link")
@@ -64,56 +84,4 @@
       <% end %>
     <% end %>
   </div>
-
-  <%= render layout: "ui/card", locals: { title: "Operations", subtitle: "Run Kamal commands with live output." } do %>
-    <% lock_text = @lock_status.presence || "Unknown" %>
-    <% unlocked = lock_text.match?(/unlocked|no lock/i) %>
-    <div class="ui-card-inner text-xs">
-      <strong class="text-slate-700 dark:text-slate-300">Lock</strong>
-      <% if unlocked %>
-        <span class="ui-badge-succeeded ml-2">Unlocked</span>
-      <% else %>
-        <pre class="ui-terminal mt-2 whitespace-pre-wrap text-xs"><%= lock_text %></pre>
-      <% end %>
-    </div>
-
-    <%= form_with url: project_deployment_path(@project), scope: :deployment, class: "mt-4 space-y-4" do |form| %>
-      <% if @project.destinations.any? %>
-        <div>
-          <%= form.label :destination, "Destination", class: "ui-label" %>
-          <%= form.select :destination, options_for_select([["default", ""]] + @project.destinations.map { |d| [d, d] }, @destination), {}, class: "ui-input" %>
-        </div>
-      <% end %>
-
-      <div class="flex flex-wrap gap-2">
-        <% %w[deploy redeploy setup].each do |command| %>
-          <%= form.button command, name: "deployment[command]", value: command, class: ui_btn_class(:primary) %>
-        <% end %>
-      </div>
-    <% end %>
-
-    <% if @active_run %>
-      <div class="mt-6 border-t border-slate-200 pt-6 dark:border-slate-800">
-        <div class="mb-3 flex items-center justify-between gap-3">
-          <h3 class="text-sm font-medium text-slate-900 dark:text-white">Live: kamal <%= @active_run.command %></h3>
-          <%= button_to "Cancel", cancel_deployment_run_path(@active_run), method: :post, class: ui_btn_class(:warning, size: :xs) %>
-        </div>
-        <%= render "ui/terminal",
-          content: @active_run.output,
-          variant: :live,
-          min_height: "min-h-[320px]",
-          data: {
-            controller: "command-output",
-            command_output_deployment_run_id_value: @active_run.id
-          } %>
-      </div>
-    <% else %>
-      <p class="ui-muted mt-6">Deploy output appears here while a command is running.</p>
-    <% end %>
-
-    <div class="mt-4 flex flex-wrap gap-2 border-t border-slate-200 pt-4 dark:border-slate-800">
-      <%= button_to "Maintenance mode", project_maintenance_path(@project, destination: @destination), method: :post, params: { mode: "maintenance" }, class: ui_btn_class(:warning, size: :xs) %>
-      <%= button_to "Live mode", project_maintenance_path(@project, destination: @destination), method: :post, params: { mode: "live" }, class: ui_btn_class(:success, size: :xs) %>
-    </div>
-  <% end %>
 </div>

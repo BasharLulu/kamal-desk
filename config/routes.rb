@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     end
     resource :logs, only: %i[show create destroy]
     resource :console, only: %i[show create destroy], controller: "consoles"
-    resource :maintenance, only: :create
+    resource :maintenance, only: :create, controller: "maintenance"
     resource :accessories, only: %i[show create]
   end
 

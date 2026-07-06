@@ -1,0 +1,32 @@
+<% project = local_assigns.fetch(:project) %>
+<% destination = local_assigns[:destination] %>
+<% lock_text = local_assigns.fetch(:lock_status, "Unknown") %>
+<% unlocked = lock_text.match?(/unlocked|no lock/i) %>
+
+<div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+  <div class="flex flex-wrap items-center gap-3">
+    <%= form_with url: project_deployment_path(project), scope: :deployment, class: "flex flex-wrap items-center gap-3" do |form| %>
+      <%= form.hidden_field :destination, value: destination.to_s %>
+
+      <div class="flex flex-wrap gap-2">
+        <% %w[deploy redeploy setup].each do |command| %>
+          <%= form.button command, name: "deployment[command]", value: command, class: "#{ui_btn_class(:primary)} #{command == 'deploy' ? 'font-semibold' : ''}" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3 text-sm">
+    <span class="text-slate-500 dark:text-slate-400">Lock</span>
+    <% if unlocked %>
+      <span class="ui-badge-succeeded">Unlocked</span>
+    <% else %>
+      <span class="ui-badge-running max-w-xs truncate" title="<%= lock_text %>"><%= lock_text.lines.first&.strip || lock_text %></span>
+    <% end %>
+
+    <div class="hidden h-4 w-px bg-slate-300 dark:bg-slate-700 sm:block"></div>
+
+    <%= button_to "Maintenance", project_maintenance_path(project, destination: destination), method: :post, params: { mode: "maintenance" }, class: ui_btn_class(:warning, size: :xs) %>
+    <%= button_to "Live", project_maintenance_path(project, destination: destination), method: :post, params: { mode: "live" }, class: ui_btn_class(:success, size: :xs) %>
+  </div>
+</div>

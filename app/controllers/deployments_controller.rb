@@ -8,7 +8,7 @@ class DeploymentsController < ApplicationController
 
     lock = Kamal::LockInspector.new(project: @project, destination: destination)
     if lock.locked? && command != "lock"
-      redirect_to @project, alert: "Deploy lock is active. Release it before deploying.
+      redirect_to project_path(@project, destination: destination), alert: "Deploy lock is active. Release it before deploying.
 #{lock.status}"
       return
     end
@@ -20,7 +20,7 @@ class DeploymentsController < ApplicationController
     end
 
     if @project.deployment_runs.exists?(status: "running")
-      redirect_to @project, alert: "A deployment is already running for this project."
+      redirect_to project_path(@project, destination: destination), alert: "A deployment is already running for this project."
       return
     end
 
