@@ -3,30 +3,26 @@
 <%= render "shared/project_nav", project: @project, destination: params[:destination] %>
 
 <div class="grid gap-6 lg:grid-cols-2">
-  <section class="rounded-xl border border-slate-800 bg-slate-900 p-6">
-    <h2 class="text-lg font-semibold text-white">Containers</h2>
-    <pre class="mt-4 overflow-auto rounded-lg bg-black p-4 text-sm text-slate-200"><%= @containers %></pre>
-  </section>
-  <section class="rounded-xl border border-slate-800 bg-slate-900 p-6">
-    <h2 class="text-lg font-semibold text-white">App details</h2>
-    <pre class="mt-4 overflow-auto rounded-lg bg-black p-4 text-sm text-slate-200"><%= @details %></pre>
-  </section>
+  <%= render layout: "ui/card", locals: { title: "Containers" } do %>
+    <%= render "ui/terminal", content: @containers %>
+  <% end %>
+  <%= render layout: "ui/card", locals: { title: "App details" } do %>
+    <%= render "ui/terminal", content: @details %>
+  <% end %>
 </div>
 
-<section class="mt-6 rounded-xl border border-slate-800 bg-slate-900 p-6">
-  <h2 class="text-lg font-semibold text-white">kamal details</h2>
-  <pre class="mt-4 overflow-auto rounded-lg bg-black p-4 text-sm text-slate-200"><%= @all_details %></pre>
-</section>
+<%= render layout: "ui/card", locals: { title: "kamal details", extra_class: "mt-6" } do %>
+  <%= render "ui/terminal", content: @all_details %>
+<% end %>
 
-<section class="mt-6 rounded-xl border border-slate-800 bg-slate-900 p-6">
-  <h2 class="text-lg font-semibold text-white">Rollback versions</h2>
+<%= render layout: "ui/card", locals: { title: "Rollback versions", extra_class: "mt-6" } do %>
   <% if @versions.any? %>
-    <div class="mt-4 flex flex-wrap gap-2">
+    <div class="flex flex-wrap gap-2">
       <% @versions.each do |version| %>
-        <%= button_to version[0, 12], project_deployment_path(@project), method: :post, params: { deployment: { command: "rollback", version: version, destination: params[:destination] } }, class: "rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 hover:bg-slate-800" %>
+        <%= button_to version[0, 12], project_deployment_path(@project), method: :post, params: { deployment: { command: "rollback", version: version, destination: params[:destination] } }, class: ui_btn_class(:secondary) %>
       <% end %>
     </div>
   <% else %>
-    <p class="mt-4 text-slate-400">No rollback versions detected.</p>
+    <%= render "ui/empty_state", message: "No rollback versions detected.", icon: "cube" %>
   <% end %>
-</section>
+<% end %>

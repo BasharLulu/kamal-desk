@@ -1,0 +1,14 @@
+<div class="px-3 pb-4" data-controller="theme">
+  <p class="mb-2 px-1 text-xs font-medium text-slate-500 dark:text-slate-500">Theme</p>
+  <div class="flex rounded-lg border border-slate-200 bg-slate-100 p-1 dark:border-slate-700 dark:bg-slate-800/80" role="group" aria-label="Color theme">
+    <button type="button" data-theme-target="button" data-theme-mode="light" data-action="theme#setTheme" class="ui-theme-btn" title="Light" aria-label="Light theme" aria-pressed="false">
+      <%= icon("sun", css_class: "h-4 w-4") %>
+    </button>
+    <button type="button" data-theme-target="button" data-theme-mode="dark" data-action="theme#setTheme" class="ui-theme-btn" title="Dark" aria-label="Dark theme" aria-pressed="false">
+      <%= icon("moon", css_class: "h-4 w-4") %>
+    </button>
+    <button type="button" data-theme-target="button" data-theme-mode="system" data-action="theme#setTheme" class="ui-theme-btn" title="System" aria-label="System theme" aria-pressed="false">
+      <%= icon("monitor", css_class: "h-4 w-4") %>
+    </button>
+  </div>
+</div>

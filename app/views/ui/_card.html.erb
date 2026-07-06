@@ -1,0 +1,23 @@
+<% title = local_assigns[:title] %>
+<% subtitle = local_assigns[:subtitle] %>
+<% actions = local_assigns[:actions] %>
+<% extra_class = local_assigns[:extra_class] %>
+
+<section class="ui-card <%= extra_class %>">
+  <% if title.present? || actions.present? %>
+    <div class="flex items-start justify-between gap-4 mb-4">
+      <div>
+        <% if title.present? %>
+          <h2 class="ui-section-title"><%= title %></h2>
+        <% end %>
+        <% if subtitle.present? %>
+          <p class="ui-muted mt-1"><%= subtitle %></p>
+        <% end %>
+      </div>
+      <% if actions.present? %>
+        <div class="flex shrink-0 flex-wrap gap-2"><%= actions %></div>
+      <% end %>
+    </div>
+  <% end %>
+  <%= yield %>
+</section>

@@ -1,0 +1,13 @@
+<% content = local_assigns.fetch(:content, "") %>
+<% variant = local_assigns.fetch(:variant, :static) %>
+<% min_height = local_assigns[:min_height] %>
+<% data = local_assigns[:data] || {} %>
+<% extra_class = local_assigns[:class] %>
+
+<% terminal_class = case variant.to_sym
+   when :live then "ui-terminal-live"
+   when :compact then "ui-terminal-compact"
+   else "ui-terminal"
+   end %>
+
+<%= tag.pre content, class: "#{terminal_class} #{extra_class} #{min_height}", data: data %>

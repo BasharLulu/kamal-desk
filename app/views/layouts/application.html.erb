@@ -1,45 +1,74 @@
 <!DOCTYPE html>
-<html class="h-full bg-slate-950">
+<html class="h-full">
   <head>
     <title><%= content_for(:title) || "Kamal Desk" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <script>
+      (function () {
+        var key = "kamal-desk-theme";
+        var mode = localStorage.getItem(key) || "system";
+        var dark = mode === "dark" || (mode === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (dark) document.documentElement.classList.add("dark");
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <%= yield :head %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="h-full text-slate-100">
-    <div class="min-h-full lg:flex">
-      <aside class="border-b border-slate-800 bg-slate-900/60 lg:min-h-screen lg:w-64 lg:border-b-0 lg:border-r">
-        <div class="px-5 py-4">
-          <%= link_to root_path, class: "text-lg font-semibold tracking-tight text-white" do %>
-            Kamal Desk
+  <body class="h-full">
+    <div class="ui-shell">
+      <aside class="ui-sidebar">
+        <div class="px-5 py-5">
+          <%= link_to root_path, class: "flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950" do %>
+            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-sky-600 text-white shadow-sm">
+              <%= icon("logo", css_class: "h-5 w-5") %>
+            </span>
+            <span>
+              <span class="block text-base font-semibold tracking-tight text-slate-900 dark:text-white">Kamal Desk</span>
+              <span class="block text-xs text-slate-500">Deploy operations</span>
+            </span>
           <% end %>
-          <p class="mt-1 text-xs text-slate-500">Kamal operations</p>
         </div>
-        <nav class="space-y-1 px-3 pb-6">
-          <%= link_to "All projects", root_path, class: "block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white" %>
+
+        <nav class="flex-1 space-y-1 px-3">
+          <%= link_to root_path, class: sidebar_link_class(current_page?(root_path) && !defined?(@project)) do %>
+            <%= icon("folder", css_class: "h-4 w-4 shrink-0") %>
+            <span>All projects</span>
+          <% end %>
           <% @sidebar_projects.each do |project| %>
-            <%= link_to project.display_name, project_path(project), class: "block truncate rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white #{'bg-slate-800 text-white' if defined?(@project) && @project == project}" %>
+            <% active = defined?(@project) && @project == project %>
+            <%= link_to project_path(project), class: sidebar_link_class(active) do %>
+              <%= icon("cube", css_class: "h-4 w-4 shrink-0") %>
+              <span class="truncate"><%= project.display_name %></span>
+            <% end %>
           <% end %>
         </nav>
+
+        <%= render "ui/theme_switcher" %>
       </aside>
 
       <div class="min-w-0 flex-1">
         <% if flash[:notice].present? || flash[:alert].present? %>
-          <div class="px-6 pt-4">
+          <div class="mx-auto max-w-7xl px-6 pt-4">
             <% if flash[:notice].present? %>
-              <div class="rounded-lg border border-emerald-800 bg-emerald-950/50 px-4 py-3 text-emerald-200"><%= flash[:notice] %></div>
+              <div class="ui-flash-notice flex items-center gap-2">
+                <%= icon("check", css_class: "h-5 w-5 shrink-0") %>
+                <span><%= flash[:notice] %></span>
+              </div>
             <% end %>
             <% if flash[:alert].present? %>
-              <div class="mt-2 rounded-lg border border-red-800 bg-red-950/50 px-4 py-3 text-red-200"><%= flash[:alert] %></div>
+              <div class="mt-2 ui-flash-alert"><%= flash[:alert] %></div>
             <% end %>
           </div>
         <% end %>
 
-        <main class="px-6 py-8">
+        <main class="mx-auto max-w-7xl px-6 py-8">
           <%= yield %>
         </main>
       </div>

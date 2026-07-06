@@ -1,0 +1,18 @@
+<% headers = local_assigns[:headers] %>
+
+<div class="ui-table-wrap">
+  <table class="ui-table">
+    <% if headers.present? %>
+      <thead>
+        <tr>
+          <% headers.each do |header| %>
+            <th><%= header %></th>
+          <% end %>
+        </tr>
+      </thead>
+    <% end %>
+    <tbody>
+      <%= yield %>
+    </tbody>
+  </table>
+</div>

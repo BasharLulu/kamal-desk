@@ -1,1 +1,219 @@
 @import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    @apply h-full font-sans antialiased;
+  }
+
+  body {
+    @apply h-full bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  }
+}
+
+@layer components {
+  .ui-shell {
+    @apply min-h-full lg:flex;
+  }
+
+  .ui-sidebar {
+    @apply flex flex-col border-b border-slate-200 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/60 lg:min-h-screen lg:w-64 lg:border-b-0 lg:border-r;
+  }
+
+  .ui-sidebar-link {
+    @apply flex items-center gap-2 truncate rounded-lg px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white dark:focus-visible:ring-offset-slate-950;
+  }
+
+  .ui-sidebar-link-active {
+    @apply border-l-2 border-sky-500 bg-slate-100 pl-[10px] font-medium text-slate-900 dark:bg-slate-800 dark:text-white;
+  }
+
+  .ui-card {
+    @apply rounded-xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/50 backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-900/80 dark:shadow-black/20;
+  }
+
+  .ui-card-inner {
+    @apply rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950;
+  }
+
+  .ui-page-title {
+    @apply text-2xl font-semibold tracking-tight text-slate-900 dark:text-white;
+  }
+
+  .ui-section-title {
+    @apply text-lg font-semibold text-slate-900 dark:text-white;
+  }
+
+  .ui-muted {
+    @apply text-sm text-slate-500 dark:text-slate-400;
+  }
+
+  .ui-link {
+    @apply text-sm text-sky-600 hover:text-sky-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-sky-400 dark:hover:text-sky-300 dark:focus-visible:ring-offset-slate-950;
+  }
+
+  .ui-input {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-slate-900 placeholder:text-slate-400 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500 dark:border-slate-700 dark:bg-slate-950 dark:text-white dark:placeholder:text-slate-500;
+  }
+
+  .ui-label {
+    @apply mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300;
+  }
+
+  .ui-btn {
+    @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-950;
+  }
+
+  .ui-btn-primary {
+    @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-950 bg-sky-600 text-white hover:bg-sky-500;
+  }
+
+  .ui-btn-secondary {
+    @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-950 border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-transparent dark:text-slate-200 dark:hover:bg-slate-800;
+  }
+
+  .ui-btn-danger {
+    @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-950 border border-red-300 text-red-700 hover:bg-red-50 dark:border-red-900 dark:text-red-300 dark:hover:bg-red-950;
+  }
+
+  .ui-btn-warning {
+    @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-950 border border-amber-300 text-amber-800 hover:bg-amber-50 dark:border-amber-800 dark:text-amber-200 dark:hover:bg-amber-950;
+  }
+
+  .ui-btn-success {
+    @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-950 border border-emerald-300 text-emerald-800 hover:bg-emerald-50 dark:border-emerald-800 dark:text-emerald-200 dark:hover:bg-emerald-950;
+  }
+
+  .ui-btn-ghost {
+    @apply inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:cursor-not-allowed disabled:opacity-50 dark:focus-visible:ring-offset-slate-950 text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800;
+  }
+
+  .ui-btn-xs {
+    @apply px-2 py-1 text-xs;
+  }
+
+  .ui-badge {
+    @apply inline-flex items-center rounded-full px-2 py-1 text-xs font-medium;
+  }
+
+  .ui-badge-running {
+    @apply inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-500/20 dark:text-amber-200;
+  }
+
+  .ui-badge-succeeded {
+    @apply inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-200;
+  }
+
+  .ui-badge-failed {
+    @apply inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-200;
+  }
+
+  .ui-badge-neutral {
+    @apply inline-flex items-center rounded-full px-2 py-1 text-xs font-medium bg-slate-200 text-slate-700 dark:bg-slate-700 dark:text-slate-200;
+  }
+
+  .ui-nav-tab {
+    @apply whitespace-nowrap rounded-md px-3 py-2 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950;
+  }
+
+  .ui-nav-tab-active {
+    @apply bg-sky-600 font-medium text-white shadow-sm;
+  }
+
+  .ui-nav-tab-inactive {
+    @apply text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white;
+  }
+
+  .ui-nav-group-label {
+    @apply px-1 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500;
+  }
+
+  .ui-chip {
+    @apply rounded-full px-3 py-1 text-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-slate-950;
+  }
+
+  .ui-chip-active {
+    @apply bg-sky-600 font-medium text-white;
+  }
+
+  .ui-chip-inactive {
+    @apply bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700;
+  }
+
+  .ui-terminal {
+    @apply overflow-auto rounded-lg border border-slate-200 bg-slate-900 p-4 font-mono text-sm leading-6 text-slate-200 dark:border-slate-800 dark:bg-black;
+  }
+
+  .ui-terminal-live {
+    @apply overflow-auto rounded-lg border border-slate-200 bg-slate-900 p-4 font-mono text-sm leading-6 text-emerald-700 dark:border-slate-800 dark:bg-black dark:text-emerald-300;
+  }
+
+  .ui-terminal-compact {
+    @apply overflow-auto rounded-lg border border-slate-200 bg-slate-900 p-4 font-mono text-xs leading-6 text-slate-200 max-h-48 dark:border-slate-800 dark:bg-black;
+  }
+
+  .ui-table-wrap {
+    @apply overflow-x-auto;
+  }
+
+  .ui-table {
+    @apply min-w-full text-left text-sm;
+  }
+
+  .ui-table thead {
+    @apply sticky top-0 bg-white text-slate-500 dark:bg-slate-900 dark:text-slate-400;
+  }
+
+  .ui-table th {
+    @apply pb-2 pr-4 font-medium;
+  }
+
+  .ui-table tbody tr {
+    @apply border-t border-slate-200 text-slate-700 transition hover:bg-slate-50 dark:border-slate-800 dark:text-slate-200 dark:hover:bg-slate-800/50;
+  }
+
+  .ui-table td {
+    @apply py-3 pr-4;
+  }
+
+  .ui-kv-grid {
+    @apply mt-3 grid grid-cols-[120px_1fr] gap-x-4 gap-y-2 text-sm text-slate-700 dark:text-slate-300;
+  }
+
+  .ui-kv-grid dt {
+    @apply text-slate-500 dark:text-slate-500;
+  }
+
+  .ui-flash-notice {
+    @apply rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800 dark:border-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-200;
+  }
+
+  .ui-flash-alert {
+    @apply rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-800 dark:border-red-800 dark:bg-red-950/50 dark:text-red-200;
+  }
+
+  .ui-alert-warning {
+    @apply rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-100;
+  }
+
+  .ui-empty {
+    @apply flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50 px-6 py-12 text-center dark:border-slate-700 dark:bg-slate-900/50;
+  }
+
+  .ui-project-card {
+    @apply block rounded-xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-sky-300 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:hover:border-slate-600;
+  }
+
+  .ui-theme-btn {
+    @apply flex flex-1 items-center justify-center rounded-md p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-500 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white;
+  }
+
+  .ui-theme-btn-active {
+    @apply bg-slate-200 text-slate-900 dark:bg-slate-700 dark:text-white;
+  }
+}

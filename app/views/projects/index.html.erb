@@ -1,61 +1,69 @@
 <% content_for :title, "Projects — Kamal Desk" %>
 
+<div class="mb-8">
+  <h1 class="ui-page-title">Kamal Desk</h1>
+  <p class="ui-muted mt-2 max-w-2xl">The missing web UI for Kamal deployments. Register projects, deploy with live output, and manage production from one place.</p>
+</div>
+
 <div class="grid gap-8 lg:grid-cols-[320px_1fr]">
   <section class="space-y-6">
-    <div class="rounded-xl border border-slate-800 bg-slate-900 p-6">
-      <h2 class="text-lg font-semibold text-white">Register project</h2>
-      <p class="mt-2 text-sm text-slate-400">Pick a discovered Kamal app or enter a path manually.</p>
-
-      <%= form_with model: @project, url: projects_path, class: "mt-4 space-y-4" do |form| %>
+    <%= render layout: "ui/card", locals: { title: "Register project", subtitle: "Pick a discovered Kamal app or enter a path manually." } do %>
+      <%= form_with model: @project, url: projects_path, class: "space-y-4" do |form| %>
         <div>
-          <%= form.label :root_path, "Project path", class: "mb-1 block text-sm text-slate-300" %>
-          <%= form.text_field :root_path, placeholder: "/Users/you/Sites/my-app", class: "w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-white" %>
+          <%= form.label :root_path, "Project path", class: "ui-label" %>
+          <%= form.text_field :root_path, placeholder: "/Users/you/Sites/my-app", class: "ui-input" %>
         </div>
-        <%= form.submit "Add project", class: "cursor-pointer rounded-lg bg-sky-600 px-4 py-2 font-medium text-white hover:bg-sky-500" %>
+        <%= form.submit "Add project", class: ui_btn_class(:primary) %>
       <% end %>
-    </div>
+    <% end %>
 
     <% if @discovered_projects.any? %>
-      <div class="rounded-xl border border-slate-800 bg-slate-900 p-6">
-        <h2 class="text-lg font-semibold text-white">Discovered in ~/Sites</h2>
-        <p class="mt-1 text-sm text-slate-400">Folders with <code class="text-slate-300">config/deploy.yml</code></p>
-        <ul class="mt-4 max-h-96 space-y-2 overflow-y-auto">
+      <%= render layout: "ui/card", locals: { title: "Discovered in ~/Sites", subtitle: "Folders with config/deploy.yml" } do %>
+        <ul class="max-h-96 space-y-2 overflow-y-auto">
           <% @discovered_projects.each do |entry| %>
-            <li class="flex items-center justify-between gap-3 rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm">
-              <div class="min-w-0">
-                <div class="truncate font-medium text-white"><%= entry.name %></div>
-                <div class="truncate text-slate-500"><%= entry.path %></div>
+            <li class="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm transition hover:border-sky-200 hover:bg-white dark:border-slate-800 dark:bg-slate-950 dark:hover:border-slate-700">
+              <div class="flex min-w-0 items-center gap-2">
+                <%= icon("cube", css_class: "h-4 w-4 shrink-0 text-slate-400") %>
+                <div class="min-w-0">
+                  <div class="truncate font-medium text-slate-900 dark:text-white"><%= entry.name %></div>
+                  <div class="truncate text-slate-500"><%= entry.path %></div>
+                </div>
               </div>
               <% if entry.registered %>
-                <span class="shrink-0 rounded-full bg-emerald-500/20 px-2 py-1 text-xs text-emerald-200">Added</span>
+                <span class="ui-badge-succeeded shrink-0">Added</span>
               <% else %>
-                <%= button_to "Add", projects_path, method: :post, params: { project: { root_path: entry.path } }, class: "shrink-0 cursor-pointer rounded-lg bg-sky-600 px-3 py-1 text-xs text-white hover:bg-sky-500" %>
+                <%= button_to "Add", projects_path, method: :post, params: { project: { root_path: entry.path } }, class: "#{ui_btn_class(:primary, size: :xs)} shrink-0" %>
               <% end %>
             </li>
           <% end %>
         </ul>
-      </div>
+      <% end %>
     <% end %>
   </section>
 
   <section>
-    <h2 class="text-lg font-semibold text-white">Your Kamal projects</h2>
+    <h2 class="ui-section-title">Your Kamal projects</h2>
     <% if @projects.any? %>
       <div class="mt-4 grid gap-4">
         <% @projects.each do |project| %>
-          <%= link_to project_path(project), class: "block rounded-xl border border-slate-800 bg-slate-900 p-5 transition hover:border-slate-600" do %>
+          <%= link_to project_path(project), class: "ui-project-card" do %>
             <div class="flex items-start justify-between gap-4">
-              <div>
-                <h3 class="font-medium text-white"><%= project.display_name %></h3>
-                <p class="mt-1 text-sm text-slate-400"><%= project.root_path %></p>
+              <div class="flex items-start gap-3">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-sky-100 text-sky-600 dark:bg-sky-600/20 dark:text-sky-400">
+                  <%= icon("rocket", css_class: "h-5 w-5") %>
+                </span>
+                <div>
+                  <h3 class="font-medium text-slate-900 dark:text-white"><%= project.display_name %></h3>
+                  <p class="ui-muted mt-1"><%= project.root_path %></p>
+                </div>
               </div>
-              <span class="rounded-full bg-slate-800 px-2 py-1 text-xs text-slate-300"><%= project.destinations.size %> destinations</span>
+              <span class="ui-badge-neutral shrink-0"><%= project.destinations.size %> destinations</span>
             </div>
           <% end %>
         <% end %>
       </div>
     <% else %>
-      <p class="mt-4 text-slate-400">No projects yet. Add a Kamal project from the list or enter a path.</p>
+      <%= render "ui/empty_state", message: "No projects yet. Add a Kamal project from the list or enter a path.", icon: "folder" %>
     <% end %>
   </section>
 </div>

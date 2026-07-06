@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import { createConsumer } from "@rails/actioncable"
 
 export default class extends Controller {
-  static targets = [ "output" ]
+  static targets = [ "output", "pauseButton" ]
   static values = { commandRunId: Number, paused: { type: Boolean, default: false } }
 
   connect() {
@@ -18,6 +18,7 @@ export default class extends Controller {
         }
       }
     )
+    this.updatePauseButton()
   }
 
   disconnect() {
@@ -27,5 +28,14 @@ export default class extends Controller {
 
   togglePause() {
     this.pausedValue = !this.pausedValue
+    this.updatePauseButton()
+  }
+
+  updatePauseButton() {
+    if (!this.hasPauseButtonTarget) return
+    const paused = this.pausedValue
+    this.pauseButtonTarget.textContent = paused ? "Resume auto-scroll" : "Pause auto-scroll"
+    this.pauseButtonTarget.classList.remove("ui-btn-secondary", "ui-btn-warning")
+    this.pauseButtonTarget.classList.add(paused ? "ui-btn-warning" : "ui-btn-secondary")
   }
 }

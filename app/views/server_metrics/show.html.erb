@@ -2,16 +2,17 @@
 <%= render "shared/project_header" %>
 <%= render "shared/project_nav", project: @project, destination: params[:destination] %>
 
-<section class="rounded-xl border border-slate-800 bg-slate-900 p-6"
-  data-controller="poll-refresh"
-  data-poll-refresh-url-value="<%= refresh_project_server_metrics_path(@project, destination: params[:destination]) %>"
-  data-poll-refresh-interval-value="15000"
->
-  <div class="flex items-center justify-between gap-4">
-    <h2 class="text-lg font-semibold text-white">docker stats</h2>
-    <span class="text-xs text-slate-500">Auto-refreshes every 15s</span>
+<%= render layout: "ui/card", locals: {
+  title: "docker stats",
+  actions: content_tag(:span, "Auto-refreshes every 15s", class: "ui-muted text-xs")
+} do %>
+  <div
+    data-controller="poll-refresh"
+    data-poll-refresh-url-value="<%= refresh_project_server_metrics_path(@project, destination: params[:destination]) %>"
+    data-poll-refresh-interval-value="15000"
+  >
+    <div data-poll-refresh-target="output">
+      <%= render "server_metrics/metrics", metrics: @metrics %>
+    </div>
   </div>
-  <div class="mt-4" data-poll-refresh-target="output">
-    <%= render "server_metrics/metrics", metrics: @metrics %>
-  </div>
-</section>
+<% end %>

@@ -2,29 +2,24 @@
 <%= render "shared/project_header" %>
 <%= render "shared/project_nav", project: @project, destination: params[:destination] %>
 
-<section class="rounded-xl border border-slate-800 bg-slate-900 p-6">
-  <h2 class="text-lg font-semibold text-white">Proxy routes</h2>
+<%= render layout: "ui/card", locals: { title: "Proxy routes" } do %>
   <% if @routes.any? %>
-    <table class="mt-4 min-w-full text-left text-sm">
-      <thead class="text-slate-400"><tr><th class="pb-2 pr-4">Service</th><th class="pb-2 pr-4">Host</th><th class="pb-2 pr-4">Target</th><th class="pb-2 pr-4">State</th><th class="pb-2">TLS</th></tr></thead>
-      <tbody>
-        <% @routes.each do |route| %>
-          <tr class="border-t border-slate-800 text-slate-200">
-            <td class="py-3 pr-4"><%= route.service %></td>
-            <td class="py-3 pr-4"><%= route.host %></td>
-            <td class="py-3 pr-4"><%= route.target %></td>
-            <td class="py-3 pr-4"><%= route.state %></td>
-            <td class="py-3"><%= route.tls %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <%= render layout: "ui/table", locals: { headers: ["Service", "Host", "Target", "State", "TLS"] } do %>
+      <% @routes.each do |route| %>
+        <tr>
+          <td><%= route.service %></td>
+          <td><%= route.host %></td>
+          <td><%= route.target %></td>
+          <td><%= route.state %></td>
+          <td><%= route.tls %></td>
+        </tr>
+      <% end %>
+    <% end %>
   <% else %>
-    <p class="mt-4 text-slate-400">No routes parsed from kamal-proxy list.</p>
+    <%= render "ui/empty_state", message: "No routes parsed from kamal-proxy list.", icon: "globe" %>
   <% end %>
-</section>
+<% end %>
 
-<section class="mt-6 rounded-xl border border-slate-800 bg-slate-900 p-6">
-  <h2 class="text-lg font-semibold text-white">Proxy details</h2>
-  <pre class="mt-4 overflow-auto rounded-lg bg-black p-4 text-sm text-slate-200"><%= @details %></pre>
-</section>
+<%= render layout: "ui/card", locals: { title: "Proxy details", extra_class: "mt-6" } do %>
+  <%= render "ui/terminal", content: @details %>
+<% end %>

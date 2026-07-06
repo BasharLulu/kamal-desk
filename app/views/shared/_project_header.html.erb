@@ -1,4 +1,11 @@
-<div class="mb-6">
-  <h1 class="text-2xl font-semibold text-white"><%= @project.display_name %></h1>
-  <p class="mt-1 text-sm text-slate-400"><%= @project.root_path %></p>
+<% actions = local_assigns[:actions] %>
+
+<div class="mb-6 flex items-start justify-between gap-4">
+  <div>
+    <h1 class="ui-page-title"><%= @project.display_name %></h1>
+    <p class="ui-muted mt-1"><%= @project.root_path %></p>
+  </div>
+  <% if actions.present? %>
+    <div class="flex shrink-0 flex-wrap gap-2"><%= actions %></div>
+  <% end %>
 </div>

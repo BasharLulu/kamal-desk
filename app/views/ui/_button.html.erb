@@ -1,0 +1,6 @@
+<% variant = local_assigns.fetch(:variant, :primary) %>
+<% size = local_assigns[:size] %>
+<% extra_class = local_assigns[:class] %>
+<% label = local_assigns.fetch(:label) %>
+
+<%= tag.button label, type: local_assigns.fetch(:type, "button"), class: "#{ui_btn_class(variant, size: size)} #{extra_class}", **local_assigns.fetch(:html, {}) %>

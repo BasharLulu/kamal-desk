@@ -6,29 +6,27 @@
 <%= render "shared/project_header" %>
 <%= render "shared/project_nav", project: @project, destination: @destination %>
 
-<div class="mb-4 rounded-lg border border-amber-800 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
+<div class="ui-alert-warning mb-4">
   You are executing code on a remote server. Proceed with caution.
 </div>
 
-<section class="rounded-xl border border-slate-800 bg-slate-900 p-6">
-  <div class="flex flex-wrap items-center justify-between gap-3">
-    <h2 class="text-lg font-semibold text-white">Remote Rails console</h2>
-    <div class="flex gap-2">
-      <% if @active_run&.running? %>
-        <%= button_to "Close console", project_console_path(@project, destination: @destination), method: :delete, class: "rounded-lg border border-amber-800 px-3 py-2 text-sm text-amber-200 hover:bg-amber-950" %>
-      <% else %>
-        <%= button_to "Open console", project_console_path(@project, destination: @destination), method: :post, class: "rounded-lg bg-sky-600 px-3 py-2 text-sm text-white hover:bg-sky-500" %>
-      <% end %>
-    </div>
-  </div>
-
+<%= render layout: "ui/card", locals: {
+  title: "Remote Rails console",
+  actions: capture do
+    if @active_run&.running?
+      button_to("Close console", project_console_path(@project, destination: @destination), method: :delete, class: ui_btn_class(:warning))
+    else
+      button_to("Open console", project_console_path(@project, destination: @destination), method: :post, class: ui_btn_class(:primary))
+    end
+  end
+} do %>
   <% if @active_run&.running? %>
     <div
-      class="mt-4 h-[480px] overflow-hidden rounded-lg border border-slate-800 bg-black p-2"
+      class="mt-4 h-[480px] overflow-hidden rounded-lg border border-slate-200 bg-slate-900 p-2 dark:border-slate-800 dark:bg-black"
       data-controller="terminal"
       data-terminal-command-run-id-value="<%= @active_run.id %>"
     ></div>
   <% else %>
-    <p class="mt-4 text-sm text-slate-400">Open a console session to run Ruby on the remote app container.</p>
+    <p class="ui-muted">Open a console session to run Ruby on the remote app container.</p>
   <% end %>
-</section>
+<% end %>

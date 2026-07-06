@@ -1,0 +1,7 @@
+<% message = local_assigns.fetch(:message) %>
+<% icon_name = local_assigns.fetch(:icon, "folder") %>
+
+<div class="ui-empty">
+  <div class="mb-3 text-slate-400 dark:text-slate-500"><%= icon(icon_name, css_class: "h-10 w-10") %></div>
+  <p class="text-sm text-slate-600 dark:text-slate-400"><%= message %></p>
+</div>

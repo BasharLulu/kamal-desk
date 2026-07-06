@@ -1,20 +1,23 @@
 <% content_for :title, "Deployment — Kamal Desk" %>
 
 <div class="mb-4 flex items-center justify-between gap-4">
-  <%= link_to "← Back to #{@project.display_name}", project_path(@project), class: "text-sm text-sky-400 hover:text-sky-300" %>
+  <%= link_to "← Back to #{@project.display_name}", project_path(@project), class: "ui-link" %>
   <% if @deployment_run.running? %>
-    <%= button_to "Cancel", cancel_deployment_run_path(@deployment_run), method: :post, class: "rounded-lg border border-amber-800 px-3 py-2 text-sm text-amber-200 hover:bg-amber-950" %>
+    <%= button_to "Cancel", cancel_deployment_run_path(@deployment_run), method: :post, class: ui_btn_class(:warning) %>
   <% end %>
 </div>
 
-<h1 class="text-2xl font-semibold text-white">kamal <%= @deployment_run.command %></h1>
-<p class="mt-1 text-sm text-slate-400">
+<h1 class="ui-page-title">kamal <%= @deployment_run.command %></h1>
+<p class="ui-muted mt-1">
   <%= @project.display_name %> · <%= @deployment_run.destination.presence || "default" %>
-  · <span class="rounded-full px-2 py-1 text-xs <%= status_badge_class(@deployment_run.status) %>"><%= @deployment_run.status %></span>
+  · <%= status_badge(@deployment_run.status) %>
 </p>
 
-<pre
-  class="mt-6 min-h-[480px] overflow-auto rounded-xl border border-slate-800 bg-black p-4 text-sm leading-6 text-emerald-300"
-  data-controller="command-output"
-  data-command-output-deployment-run-id-value="<%= @deployment_run.id %>"
-><%= @deployment_run.output %></pre>
+<%= render "ui/terminal",
+  content: @deployment_run.output,
+  variant: :live,
+  min_height: "mt-6 min-h-[480px]",
+  data: {
+    controller: "command-output",
+    command_output_deployment_run_id_value: @deployment_run.id
+  } %>
