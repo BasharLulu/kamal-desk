@@ -37,10 +37,7 @@ class Project < ApplicationRecord
   end
 
   def self.discover_destinations(root)
-    Dir.glob(File.join(root, "config", "deploy.*.yml")).filter_map do |path|
-      name = File.basename(path).delete_prefix("deploy.").delete_suffix(".yml")
-      name unless name == "yml" || name.blank?
-    end.sort
+    Kamal::DestinationDiscovery.call(root)
   end
 
   def display_name

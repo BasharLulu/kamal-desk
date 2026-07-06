@@ -5,7 +5,7 @@ module Kamal
     class RunnerError < StandardError; end
 
     def self.kamal_available?(project)
-      run(project:, args: [ "version" ], timeout: 10).success?
+      run(project:, args: [ "version" ], timeout: 10).success
     rescue RunnerError
       false
     end

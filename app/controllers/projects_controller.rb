@@ -4,6 +4,7 @@ class ProjectsController < ApplicationController
   def index
     @projects = Project.order(:name)
     @project = Project.new
+    @discovered_projects = Kamal::ProjectDiscovery.scan
   end
 
   def show
@@ -18,6 +19,7 @@ class ProjectsController < ApplicationController
     redirect_to @project, notice: "Project registered."
   rescue ActiveRecord::RecordInvalid => e
     @projects = Project.order(:name)
+    @discovered_projects = Kamal::ProjectDiscovery.scan
     @project = Project.new(project_params)
     flash.now[:alert] = e.record.errors.full_messages.to_sentence.presence || e.message
     render :index, status: :unprocessable_entity

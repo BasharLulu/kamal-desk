@@ -1,16 +1,40 @@
 <% content_for :title, "Projects — Kamal Desk" %>
 
 <div class="grid gap-8 lg:grid-cols-[320px_1fr]">
-  <section class="rounded-xl border border-slate-800 bg-slate-900 p-6">
-    <h2 class="text-lg font-semibold text-white">Register project</h2>
-    <p class="mt-2 text-sm text-slate-400">Point Kamal Desk at a folder containing <code class="text-slate-300">config/deploy.yml</code>.</p>
+  <section class="space-y-6">
+    <div class="rounded-xl border border-slate-800 bg-slate-900 p-6">
+      <h2 class="text-lg font-semibold text-white">Register project</h2>
+      <p class="mt-2 text-sm text-slate-400">Pick a discovered Kamal app or enter a path manually.</p>
 
-    <%= form_with model: @project, url: projects_path, class: "mt-4 space-y-4" do |form| %>
-      <div>
-        <%= form.label :root_path, "Project path", class: "mb-1 block text-sm text-slate-300" %>
-        <%= form.text_field :root_path, placeholder: "/Users/you/Sites/my-app", class: "w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-white" %>
+      <%= form_with model: @project, url: projects_path, class: "mt-4 space-y-4" do |form| %>
+        <div>
+          <%= form.label :root_path, "Project path", class: "mb-1 block text-sm text-slate-300" %>
+          <%= form.text_field :root_path, placeholder: "/Users/you/Sites/my-app", class: "w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-white" %>
+        </div>
+        <%= form.submit "Add project", class: "cursor-pointer rounded-lg bg-sky-600 px-4 py-2 font-medium text-white hover:bg-sky-500" %>
+      <% end %>
+    </div>
+
+    <% if @discovered_projects.any? %>
+      <div class="rounded-xl border border-slate-800 bg-slate-900 p-6">
+        <h2 class="text-lg font-semibold text-white">Discovered in ~/Sites</h2>
+        <p class="mt-1 text-sm text-slate-400">Folders with <code class="text-slate-300">config/deploy.yml</code></p>
+        <ul class="mt-4 max-h-96 space-y-2 overflow-y-auto">
+          <% @discovered_projects.each do |entry| %>
+            <li class="flex items-center justify-between gap-3 rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm">
+              <div class="min-w-0">
+                <div class="truncate font-medium text-white"><%= entry.name %></div>
+                <div class="truncate text-slate-500"><%= entry.path %></div>
+              </div>
+              <% if entry.registered %>
+                <span class="shrink-0 rounded-full bg-emerald-500/20 px-2 py-1 text-xs text-emerald-200">Added</span>
+              <% else %>
+                <%= button_to "Add", projects_path, method: :post, params: { project: { root_path: entry.path } }, class: "shrink-0 cursor-pointer rounded-lg bg-sky-600 px-3 py-1 text-xs text-white hover:bg-sky-500" %>
+              <% end %>
+            </li>
+          <% end %>
+        </ul>
       </div>
-      <%= form.submit "Add project", class: "cursor-pointer rounded-lg bg-sky-600 px-4 py-2 font-medium text-white hover:bg-sky-500" %>
     <% end %>
   </section>
 
@@ -31,7 +55,7 @@
         <% end %>
       </div>
     <% else %>
-      <p class="mt-4 text-slate-400">No projects yet. Add a Kamal project path to get started.</p>
+      <p class="mt-4 text-slate-400">No projects yet. Add a Kamal project from the list or enter a path.</p>
     <% end %>
   </section>
 </div>
