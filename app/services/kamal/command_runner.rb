@@ -29,35 +29,33 @@ module Kamal
       exit_status = nil
       stopped = false
 
-      Dir.chdir(@project.root_path) do
-        Open3.popen2e(*command) do |_stdin, stdout_stderr, wait_thr|
-          on_start&.call(wait_thr.pid)
+      Open3.popen2e(*command, chdir: @project.root_path) do |_stdin, stdout_stderr, wait_thr|
+        @on_start&.call(wait_thr.pid)
 
-          reader = Thread.new do
-            stdout_stderr.each do |line|
-              if should_stop&.call
-                stopped = true
-                Process.kill("INT", wait_thr.pid) rescue nil
-                break
-              end
-
-              output << line
-              on_output&.call(line)
+        reader = Thread.new do
+          stdout_stderr.each do |line|
+            if @should_stop&.call
+              stopped = true
+              Process.kill("INT", wait_thr.pid) rescue nil
+              break
             end
-          end
 
-          if timeout
-            unless wait_thr.join(timeout)
-              Process.kill("TERM", wait_thr.pid) rescue nil
-              raise RunnerError, "Command timed out after #{timeout}s"
-            end
-          else
-            wait_thr.join
+            output << line
+            @on_output&.call(line)
           end
-
-          reader.join
-          exit_status = wait_thr.value
         end
+
+        if timeout
+          unless wait_thr.join(timeout)
+            Process.kill("TERM", wait_thr.pid) rescue nil
+            raise RunnerError, "Command timed out after #{timeout}s"
+          end
+        else
+          wait_thr.join
+        end
+
+        reader.join
+        exit_status = wait_thr.value
       end
 
       Result.new(
