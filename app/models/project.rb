@@ -5,6 +5,7 @@ class Project < ApplicationRecord
   ].freeze
 
   has_many :deployment_runs, dependent: :destroy
+  has_many :command_runs, dependent: :destroy
 
   validates :root_path, presence: true, uniqueness: true
   validates :config_path, presence: true

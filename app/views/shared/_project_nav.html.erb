@@ -4,6 +4,8 @@
   <%= link_to "Containers", project_containers_path(project, destination: destination), class: nav_link_class(request.path, project_containers_path(project)) %>
   <%= link_to "Proxy", project_proxy_path(project, destination: destination), class: nav_link_class(request.path, project_proxy_path(project)) %>
   <%= link_to "Audit", project_audit_path(project, destination: destination), class: nav_link_class(request.path, project_audit_path(project)) %>
+  <%= link_to "Logs", project_logs_path(project, destination: destination), class: nav_link_class(request.path, project_logs_path(project)) %>
+  <%= link_to "Console", project_console_path(project, destination: destination), class: nav_link_class(request.path, project_console_path(project)) %>
   <%= link_to "Server load", project_server_metrics_path(project, destination: destination), class: nav_link_class(request.path, project_server_metrics_path(project)) %>
 </nav>
 

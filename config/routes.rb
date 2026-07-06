@@ -13,6 +13,8 @@ Rails.application.routes.draw do
     resource :server_metrics, only: :show do
       get :refresh
     end
+    resource :logs, only: %i[show create destroy]
+    resource :console, only: %i[show create destroy], controller: "consoles"
   end
 
   resources :deployment_runs, only: :show do

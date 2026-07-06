@@ -1,0 +1,21 @@
+<% content_for :title, "Logs — #{@project.display_name}" %>
+<%= render "shared/project_header" %>
+<%= render "shared/project_nav", project: @project, destination: @destination %>
+
+<section class="rounded-xl border border-slate-800 bg-slate-900 p-6">
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <h2 class="text-lg font-semibold text-white">kamal app logs -f</h2>
+    <div class="flex gap-2">
+      <% if @active_run&.running? %>
+        <%= button_to "Stop", project_logs_path(@project, destination: @destination), method: :delete, class: "rounded-lg border border-amber-800 px-3 py-2 text-sm text-amber-200 hover:bg-amber-950" %>
+      <% else %>
+        <%= button_to "Start streaming", project_logs_path(@project, destination: @destination), method: :post, class: "rounded-lg bg-sky-600 px-3 py-2 text-sm text-white hover:bg-sky-500" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div data-controller="log-stream" data-log-stream-command-run-id-value="<%= @active_run&.id %>" class="mt-4">
+    <button type="button" data-action="log-stream#togglePause" class="mb-2 rounded-lg border border-slate-700 px-3 py-1 text-xs text-slate-300 hover:bg-slate-800">Pause / resume auto-scroll</button>
+    <pre data-log-stream-target="output" class="min-h-[480px] overflow-auto rounded-lg border border-slate-800 bg-black p-4 text-sm leading-6 text-emerald-300"><%= @active_run&.output %></pre>
+  </div>
+</section>

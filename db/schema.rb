@@ -10,7 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_06_071823) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_06_072040) do
+  create_table "command_runs", force: :cascade do |t|
+    t.string "command_type"
+    t.datetime "created_at", null: false
+    t.string "destination"
+    t.integer "exit_code"
+    t.datetime "finished_at"
+    t.text "output"
+    t.integer "pid"
+    t.integer "project_id", null: false
+    t.datetime "started_at"
+    t.string "status"
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_command_runs_on_project_id"
+  end
+
   create_table "deployment_runs", force: :cascade do |t|
     t.string "command", null: false
     t.datetime "created_at", null: false
@@ -169,6 +184,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_06_071823) do
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
   end
 
+  add_foreign_key "command_runs", "projects"
   add_foreign_key "deployment_runs", "projects"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
