@@ -15,8 +15,8 @@
 | Ruby | 4.0.5 (`.ruby-version`, `.tool-versions`) |
 | Database | SQLite (`storage/development.sqlite3`) |
 | Location | `~/Sites/kamal-desk` (not `~/Projects`) |
-| Audience | Personal/internal tool |
-| Monetization | None (no licensing) |
+| Audience | Open source (MIT) |
+| Monetization | None |
 | Multi-project | Yes — register many Kamal apps |
 | Project registration | Auto-discover from `~/Sites` + manual path input (no native folder picker — unreliable in browsers) |
 
@@ -214,7 +214,7 @@ app/
 | Commit | Issue | Fix |
 |--------|-------|-----|
 | (uncommitted → included in `6128252`) | `NameError: on_start` | Use `@on_start`, `@on_output`, `@should_stop` instance variables in `CommandRunner#run` |
-| `6128252` | `PendingMigrationError` with halaplan's 68 migrations when clicking Overview | **Root cause:** `Dir.chdir` in `CommandRunner` changed cwd for entire Puma process; concurrent requests resolved `db/migrate` relative to registered project (e.g. halaplan). **Fix:** `Open3.popen2e(*cmd, chdir: project.root_path)` — only child process changes directory. |
+| `6128252` | `PendingMigrationError` when clicking Overview on a project with many migrations | **Root cause:** `Dir.chdir` in `CommandRunner` changed cwd for entire Puma process; concurrent requests resolved `db/migrate` relative to registered project. **Fix:** `Open3.popen2e(*cmd, chdir: project.root_path)` — only child process changes directory. |
 
 ## Setup & operations
 
@@ -302,14 +302,14 @@ KAMAL_DESK_PASSWORD=secret bin/rails server -b 127.0.0.1
 | Polaris | Kamal Desk |
 |---------|------------|
 | Native macOS app | Browser on localhost |
-| Paid license (2 devices) | Free, personal |
+| Paid license (2 devices) | Free, open source (MIT) |
 | Native folder picker | Auto-discover + path input |
 | Polished native UX | Functional Hotwire + Tailwind |
 | Proxy traffic dashboard | Not implemented |
 
 ## Verification checklist
 
-Use a real Kamal project (e.g. halaplan):
+Use a real Kamal project:
 
 - [ ] Register project → destinations and hosts render
 - [ ] `kamal deploy` streams output; `DeploymentRun` records result

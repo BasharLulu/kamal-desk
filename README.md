@@ -2,6 +2,8 @@
 
 The missing web UI for Kamal deployments.
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 Kamal Desk is a local-first Rails app that wraps the [Kamal CLI](https://kamal-deploy.org/) — similar to [Polaris](https://polaris-deploy.com/), but in your browser. Register Kamal projects, deploy with live output, inspect containers and proxy routes, stream logs, and open a remote Rails console.
 
 **Repository:** https://github.com/BasharLulu/kamal-desk
@@ -92,6 +94,10 @@ Rails 8 · Ruby 4.0.5 · SQLite · Hotwire · ActionCable · Solid Queue · Tail
 
 See [PLAN.md](PLAN.md) for the full implementation record — architecture, commit history, bug fixes, and deferred work.
 
+## Contributing
+
+Bug reports, feature ideas, and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## License
 
-Private/personal tool. No license specified.
+[MIT](LICENSE) — Copyright (c) 2026 Bashar Lulu
