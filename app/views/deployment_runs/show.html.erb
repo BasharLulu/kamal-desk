@@ -1,7 +1,10 @@
 <% content_for :title, "Deployment — Kamal Desk" %>
 
-<div class="mb-4">
+<div class="mb-4 flex items-center justify-between gap-4">
   <%= link_to "← Back to #{@project.display_name}", project_path(@project), class: "text-sm text-sky-400 hover:text-sky-300" %>
+  <% if @deployment_run.running? %>
+    <%= button_to "Cancel", cancel_deployment_run_path(@deployment_run), method: :post, class: "rounded-lg border border-amber-800 px-3 py-2 text-sm text-amber-200 hover:bg-amber-950" %>
+  <% end %>
 </div>
 
 <h1 class="text-2xl font-semibold text-white">kamal <%= @deployment_run.command %></h1>

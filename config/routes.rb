@@ -13,7 +13,11 @@ Rails.application.routes.draw do
     resource :server_metrics, only: :show
   end
 
-  resources :deployment_runs, only: :show
+  resources :deployment_runs, only: :show do
+    member do
+      post :cancel
+    end
+  end
 
   root "projects#index"
 end

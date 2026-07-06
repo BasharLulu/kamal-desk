@@ -1,4 +1,5 @@
 require "open3"
+require "shellwords"
 
 module Kamal
   class CommandRunner
@@ -10,33 +11,44 @@ module Kamal
       false
     end
 
-    def self.run(project:, args:, destination: nil, timeout: nil, on_output: nil)
-      new(project:, destination:, on_output:).run(args, timeout:)
+    def self.run(project:, args:, destination: nil, timeout: nil, on_output: nil, on_start: nil, should_stop: nil)
+      new(project:, destination:, on_output:, on_start:, should_stop:).run(args, timeout:)
     end
 
-    def initialize(project:, destination: nil, on_output: nil)
+    def initialize(project:, destination: nil, on_output: nil, on_start: nil, should_stop: nil)
       @project = project
       @destination = destination.presence
       @on_output = on_output
+      @on_start = on_start
+      @should_stop = should_stop
     end
 
     def run(args, timeout: nil)
       command = build_command(args)
       output = +""
       exit_status = nil
+      stopped = false
 
       Dir.chdir(@project.root_path) do
         Open3.popen2e(*command) do |_stdin, stdout_stderr, wait_thr|
+          on_start&.call(wait_thr.pid)
+
           reader = Thread.new do
             stdout_stderr.each do |line|
+              if should_stop&.call
+                stopped = true
+                Process.kill("INT", wait_thr.pid) rescue nil
+                break
+              end
+
               output << line
-              @on_output&.call(line)
+              on_output&.call(line)
             end
           end
 
           if timeout
             unless wait_thr.join(timeout)
-              Process.kill("TERM", wait_thr.pid)
+              Process.kill("TERM", wait_thr.pid) rescue nil
               raise RunnerError, "Command timed out after #{timeout}s"
             end
           else
@@ -48,7 +60,12 @@ module Kamal
         end
       end
 
-      Result.new(output:, success: exit_status.success?, exit_code: exit_status.exitstatus)
+      Result.new(
+        output: output,
+        success: stopped ? false : exit_status.success?,
+        exit_code: stopped ? 130 : exit_status.exitstatus,
+        stopped: stopped
+      )
     end
 
     private
@@ -69,6 +86,6 @@ module Kamal
       end
     end
 
-    Result = Data.define(:output, :success, :exit_code)
+    Result = Data.define(:output, :success, :exit_code, :stopped)
   end
 end

@@ -6,6 +6,13 @@ class DeploymentsController < ApplicationController
     destination = deployment_params[:destination].presence
     version = deployment_params[:version].presence
 
+    lock = Kamal::LockInspector.new(project: @project, destination: destination)
+    if lock.locked? && command != "lock"
+      redirect_to @project, alert: "Deploy lock is active. Release it before deploying.
+#{lock.status}"
+      return
+    end
+
     command_string = if command == "rollback" && version.present?
       "rollback #{version}"
     else

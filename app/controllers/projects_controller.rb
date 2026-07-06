@@ -12,6 +12,8 @@ class ProjectsController < ApplicationController
     @config_summaries = Kamal::ConfigLoader.new(project: @project).summaries
     @deployment_runs = @project.deployment_runs.recent.limit(20)
     @kamal_available = @project.kamal_available?
+    @active_run = @project.deployment_runs.find_by(status: "running")
+    @lock_status = Kamal::LockInspector.new(project: @project, destination: @destination).status
   end
 
   def create
