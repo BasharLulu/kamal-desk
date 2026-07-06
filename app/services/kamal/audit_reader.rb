@@ -13,7 +13,7 @@ module Kamal
           args: %w[audit],
           timeout: 30
         ).output
-        output.lines.last(limit_lines).join
+        Kamal::SecretFilter.redact(output.lines.last(limit_lines).join)
       end
     end
 

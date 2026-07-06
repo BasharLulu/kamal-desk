@@ -11,32 +11,38 @@
   </head>
 
   <body class="h-full text-slate-100">
-    <div class="min-h-full">
-      <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur">
-        <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div>
-            <%= link_to root_path, class: "text-lg font-semibold tracking-tight text-white" do %>
-              Kamal Desk
+    <div class="min-h-full lg:flex">
+      <aside class="border-b border-slate-800 bg-slate-900/60 lg:min-h-screen lg:w-64 lg:border-b-0 lg:border-r">
+        <div class="px-5 py-4">
+          <%= link_to root_path, class: "text-lg font-semibold tracking-tight text-white" do %>
+            Kamal Desk
+          <% end %>
+          <p class="mt-1 text-xs text-slate-500">Kamal operations</p>
+        </div>
+        <nav class="space-y-1 px-3 pb-6">
+          <%= link_to "All projects", root_path, class: "block rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white" %>
+          <% @sidebar_projects.each do |project| %>
+            <%= link_to project.display_name, project_path(project), class: "block truncate rounded-lg px-3 py-2 text-sm text-slate-300 hover:bg-slate-800 hover:text-white #{'bg-slate-800 text-white' if defined?(@project) && @project == project}" %>
+          <% end %>
+        </nav>
+      </aside>
+
+      <div class="min-w-0 flex-1">
+        <% if flash[:notice].present? || flash[:alert].present? %>
+          <div class="px-6 pt-4">
+            <% if flash[:notice].present? %>
+              <div class="rounded-lg border border-emerald-800 bg-emerald-950/50 px-4 py-3 text-emerald-200"><%= flash[:notice] %></div>
             <% end %>
-            <p class="text-sm text-slate-400">The missing web UI for Kamal deployments</p>
+            <% if flash[:alert].present? %>
+              <div class="mt-2 rounded-lg border border-red-800 bg-red-950/50 px-4 py-3 text-red-200"><%= flash[:alert] %></div>
+            <% end %>
           </div>
-        </div>
-      </header>
+        <% end %>
 
-      <% if flash[:notice].present? || flash[:alert].present? %>
-        <div class="mx-auto max-w-7xl px-6 pt-4">
-          <% if flash[:notice].present? %>
-            <div class="rounded-lg border border-emerald-800 bg-emerald-950/50 px-4 py-3 text-emerald-200"><%= flash[:notice] %></div>
-          <% end %>
-          <% if flash[:alert].present? %>
-            <div class="mt-2 rounded-lg border border-red-800 bg-red-950/50 px-4 py-3 text-red-200"><%= flash[:alert] %></div>
-          <% end %>
-        </div>
-      <% end %>
-
-      <main class="mx-auto max-w-7xl px-6 py-8">
-        <%= yield %>
-      </main>
+        <main class="px-6 py-8">
+          <%= yield %>
+        </main>
+      </div>
     </div>
   </body>
 </html>

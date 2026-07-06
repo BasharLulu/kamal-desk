@@ -121,5 +121,10 @@
     <% else %>
       <p class="mt-6 text-sm text-slate-500">Deploy output appears here while a command is running.</p>
     <% end %>
+      <div class="mt-4 flex flex-wrap gap-2 border-t border-slate-800 pt-4">
+        <%= button_to "Maintenance mode", project_maintenance_path(@project, destination: @destination), method: :post, params: { mode: "maintenance" }, class: "rounded-lg border border-amber-800 px-3 py-2 text-xs text-amber-200 hover:bg-amber-950" %>
+        <%= button_to "Live mode", project_maintenance_path(@project, destination: @destination), method: :post, params: { mode: "live" }, class: "rounded-lg border border-emerald-800 px-3 py-2 text-xs text-emerald-200 hover:bg-emerald-950" %>
+      </div>
+
   </section>
 </div>
